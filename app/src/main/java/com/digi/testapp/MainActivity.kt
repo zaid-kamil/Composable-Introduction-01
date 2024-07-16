@@ -9,7 +9,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -25,11 +25,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.digi.testapp.ui.theme.TestAppTheme
@@ -148,17 +151,47 @@ fun InfoCard(modifier: Modifier = Modifier) {
     ) {
         Row {
             Column(
-                modifier = Modifier.weight(1f).height(300.dp)
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .weight(1f)
+                    .height(200.dp)
             ) {
-                Text(text = "Goku", style = MaterialTheme.typography.displayLarge)
-                Text(text = "Super Sayian")
-                Text(text = "Z fighter")
-                Text(text = "9000 lvl")
+                Column {
+                    Text(
+                        text = "Son Goku",
+                        style = MaterialTheme.typography.displaySmall,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                    Text(
+                        text = "Super Sayian",
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = MaterialTheme.colorScheme.secondary
+                    )
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Text(
+                        text = "9000 lvl",
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                }
             }
             Image(
                 painter = painterResource(id = R.drawable.goku),
                 contentDescription = null,
-                modifier = Modifier.weight(1f).height(300.dp)
+                modifier = Modifier
+                    .weight(1f)
+                    .height(200.dp)
+                    .drawBehind {
+                        drawCircle(
+                            color = Color.Blue.copy(alpha = 0.1f),
+                            radius = 400f,
+                        )
+                        drawCircle(
+                            color = Color.Blue.copy(alpha = 0.2f),
+                            radius = 300f,
+                        )
+                    }
             )
         }
     }
