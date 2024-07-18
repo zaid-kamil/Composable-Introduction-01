@@ -15,12 +15,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -39,13 +43,16 @@ import androidx.compose.ui.unit.sp
 import com.digi.testapp.ui.theme.TestAppTheme
 
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             TestAppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    RatingCard()
+                Scaffold(
+                    modifier = Modifier.fillMaxSize()
+                ) { innerPadding ->
+                    JJKList(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
@@ -211,14 +218,13 @@ fun TaskList(modifier: Modifier = Modifier) {
         "Buy clothes", "Shave", "Sleep", "Dont eat sweets",
     )
     LazyColumn {
-        items(myTasks){
+        items(myTasks) {
             Row(
                 modifier = Modifier
                     .padding(8.dp)
                     .fillMaxWidth()
             ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = null)
-                Text(text = it, style = MaterialTheme.typography.headlineSmall)
+                Text("📌 $it", fontSize = 24.sp)
             }
         }
     }
@@ -228,4 +234,80 @@ fun TaskList(modifier: Modifier = Modifier) {
 @Composable
 private fun TaskListPreview() {
     TaskList()
+}
+
+
+@Composable
+fun JJKList(modifier: Modifier = Modifier) {
+    val jjk = listOf(
+        "Aoi Todo", "Satoru Gojo", "Nanami Kento",
+        "Takuma Ino", "Yuji Itadori", "Yuta Okkotsu",
+    )
+    val jjkImages = listOf(
+        R.drawable.aoitodo, R.drawable.gojo,
+        R.drawable.nanami, R.drawable.takuma,
+        R.drawable.yuji, R.drawable.yuta,
+    )
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier.fillMaxSize().padding(16.dp)
+    ) {
+        itemsIndexed(jjk) { index, name ->
+            val imgScale = 1f
+            Card(
+                colors = CardDefaults.cardColors(
+                   containerColor = MaterialTheme.colorScheme.background
+                ),
+                modifier = Modifier.padding(8.dp).width(300.dp),
+                elevation = CardDefaults.cardElevation(
+                    defaultElevation = 8.dp
+                ),
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        painter = painterResource(id = jjkImages[index]),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .weight(1f)
+                            .size(200.dp)
+                            .drawBehind {
+                                drawCircle(
+                                    color = Color.Blue.copy(alpha = 0.1f),
+                                    radius = 400f,
+                                )
+                                drawContext.transform.scale(
+                                    scaleX = imgScale,
+                                    scaleY = imgScale
+                                )
+                                drawContext.transform.translate(
+                                    left = 0f,
+                                    top = 100f
+                                )
+                                drawCircle(
+                                    color = Color.Red.copy(alpha = 0.2f),
+                                    radius = 300f,
+                                )
+
+                            }
+                    )
+                    Text(
+                        text = name,
+                        modifier = Modifier.weight(1f),
+                        style = MaterialTheme.typography.headlineLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                }
+            }
+        }
+    }
+
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun JJKListPrevieew() {
+    JJKList()
 }
